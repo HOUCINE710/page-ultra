@@ -64,27 +64,69 @@
       font-weight: bold;
       color: #7A52D1 !important;
     }
+
+    /* ✅ شكل احترافي للـ Toast */
+.custom-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  min-width: 320px;
+  max-width: 400px;
+  gap: 12px;
+  animation: slideIn 0.4s ease forwards;
+}
+
+/* أيقونة داخل الـ Toast */
+.toast-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+/* الرسالة داخل الـ Toast */
+.toast-message {
+  flex: 1;
+  font-size: 15px;
+}
+
+/* حركة دخول */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
   </style>
 </head>
 <body class="bg-gray-900 text-white">
     <!-- Toast لعدم وجود المحفظة -->
-<div id="noExtToast" class="toast align-items-center text-white bg-danger border-0" role="alert">
-  <div class="d-flex">
-    <div class="toast-body">
-      ⚠️ لم يتم العثور على إضافة Ultra Wallet! الرجاء تثبيتها من: <a href="https://ultra.io/download" class="text-white" target="_blank">Ultra.io</a>
-    </div>
-    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+<!-- ✅ Toast: Ultra Wallet غير مثبتة -->
+<div id="noExtToast" class="custom-toast bg-danger text-white">
+  <div class="toast-icon">⚠️</div>
+  <div class="toast-message">
+    لم يتم العثور على إضافة <strong>Ultra Wallet</strong>!<br>
+    الرجاء تثبيتها من: 
+    <a href="https://ultra.io/download" class="text-white text-decoration-underline" target="_blank">Ultra.io</a>
   </div>
+  <button class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
 </div>
 
-<!-- Toast لعدم وجود جلسة موثوقة -->
-<div id="liveToast" class="toast align-items-center text-white bg-warning border-0" role="alert">
-  <div class="d-flex">
-    <div class="toast-body">
-      ℹ️ الرجاء تسجيل الدخول لمحفظتك Ultra للاستمرار.
-    </div>
-    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+<!-- ✅ Toast: يجب تسجيل الدخول -->
+<div id="liveToast" class="custom-toast bg-warning text-dark">
+  <div class="toast-icon">ℹ️</div>
+  <div class="toast-message">
+    الرجاء تسجيل الدخول إلى محفظتك <strong>Ultra</strong> للاستمرار.
   </div>
+  <button class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
 </div>
 
   <main class="max-w-4xl mx-auto px-4 py-10">
@@ -221,6 +263,17 @@ async function logoutWallet() {
   } catch (error) {
      console.log("ℹ️ تم إلغاء تسجيل الخروج من قبل المستخدم.");
      return;
+  }
+}
+
+
+function showToast(id) {
+  const toastEl = document.getElementById(id);
+  if (toastEl) {
+    toastEl.classList.add('show');
+    setTimeout(() => {
+      toastEl.classList.remove('show');
+    }, 5000); // إخفاؤه بعد 5 ثوانٍ
   }
 }
 
