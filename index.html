@@ -41,6 +41,12 @@
       <a href="https://ultra.io/download" target="_blank" class="underline text-white font-bold">ultra.io/download</a>
     </span>
   </div>
+  <!-- ✅ Custom Login Required Toast -->
+<div id="loginToast" class="fixed top-28 left-0 max-w-md bg-yellow-400 text-black px-6 py-4 rounded shadow-lg hidden z-50 slide-in-left">
+  <strong class="block mb-1">ℹ️ Login Required</strong>
+  <span>Please login to your <strong>Ultra</strong> Wallet to continue.</span>
+</div>
+
 
   <main class="max-w-4xl mx-auto px-4 py-10">
     <h1 class="text-2xl font-bold text-purple-400 mb-6">
@@ -69,18 +75,19 @@
   </main>
 
   <script>
-    function showCustomToast(messageHtml) {
-      const toast = document.getElementById('customToast');
-      if (toast) {
-        toast.innerHTML = messageHtml;
-        toast.classList.remove('hidden');
-        toast.classList.add('slide-in-left');
+  function showCustomToast(id, messageHtml) {
+  const toast = document.getElementById(id);
+  if (toast) {
+    toast.innerHTML = messageHtml;
+    toast.classList.remove('hidden');
+    toast.classList.add('slide-in-left');
 
-        setTimeout(() => {
-          toast.classList.add('hidden');
-        }, 6000);
-      }
-    }
+    setTimeout(() => {
+      toast.classList.add('hidden');
+    }, 6000);
+  }
+}
+
 
     if (document.readyState !== 'complete') {
       window.addEventListener('load', afterWindowLoaded);
@@ -88,28 +95,32 @@
       afterWindowLoaded();
     }
 
-    function afterWindowLoaded() {
-      if (!window.ultra) {
-        console.log('❌ Ultra Wallet not detected!');
-        showCustomToast(`
-          <strong class="block mb-1">⚠️ Ultra Wallet extension not found</strong>
-          <span>
-            Please install it from
-            <a href="https://ultra.io/download" target="_blank" class="underline text-white font-bold">ultra.io/download</a>
-          </span>
-        `);
-        return;
-      }
+  function afterWindowLoaded() {
+  if (!window.ultra) {
+    console.log('❌ Ultra Wallet not detected!');
+    showCustomToast('customToast', `
+      <strong class="block mb-1">⚠️ Ultra Wallet extension not found</strong>
+      <span>Please install it from
+        <a href="https://ultra.io/download" target="_blank" class="underline text-white font-bold">ultra.io/download</a>
+      </span>
+    `);
+    return;
+  }
 
-      console.log('✅ Ultra Wallet is available!');
+  console.log('✅ Ultra Wallet is available!');
 
-      const eagerlyConnection = localStorage.getItem('eagerlyConnection');
-      if (!eagerlyConnection || eagerlyConnection !== 'true') {
-        console.log("⚠️ No trusted session found in localStorage!");
-      } else {
-        console.log("🔐 Trusted session found!");
-      }
-    }
+  const eagerlyConnection = localStorage.getItem('eagerlyConnection');
+  if (!eagerlyConnection || eagerlyConnection !== 'true') {
+    console.log("⚠️ No trusted session found in localStorage!");
+    showCustomToast('loginToast', `
+      <strong class="block mb-1">ℹ️ Login Required</strong>
+      <span>Please login to your <strong>Ultra</strong> Wallet to continue.</span>
+    `);
+  } else {
+    console.log("🔐 Trusted session found!");
+  }
+}
+
 
     async function loginWallet() {
       try {
