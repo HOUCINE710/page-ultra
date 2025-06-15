@@ -113,7 +113,8 @@
     </div>
   </main>
 
-  <!-- Mock functions for demonstration --><script>
+  <!-- Mock functions for demonstration -->
+   <script>
 // التحقق مما إذا كانت الصفحة قد اكتملت تحميلها
 if (document.readyState !== 'complete') {
   window.addEventListener('load', afterWindowLoaded);
@@ -189,7 +190,7 @@ async function checkWallet() {
     // استخراج البيانات من الاستجابة
     const walletId = response.data.blockchainid;
     const pubKey = response.data.publicKey;
-
+   console.log(response.data);
     console.log("✅ تم التحقق من الاتصال الموثوق:");
     console.log("🔗 Wallet ID: " + walletId);
     console.log("🔑 Public Key: " + pubKey);
@@ -207,11 +208,27 @@ async function checkWallet() {
 }
 
 
-// دالة تسجيل الخروج من المحفظة (يمكنك لاحقًا ربطها بزر)
-function logoutWallet() {
-  console.log('👋 تم قطع الاتصال بالمحفظة');
-  localStorage.removeItem('eagerlyConnection');
+// 🧹 دالة تسجيل الخروج من المحفظة
+async function logoutWallet() {
+  console.log("👋 جارٍ تسجيل الخروج من المحفظة...");
+
+  try {
+    // استدعاء دالة فصل الاتصال
+    const result = await ultra.disconnect();
+
+    // حذف بيانات الجلسة من التخزين المحلي
+    localStorage.removeItem('eagerlyConnection');
+
+    // توضيح في الـ Console
+    console.log("✅ تم فصل الاتصال بالمحفظة بنجاح!");
+    console.log(result); // عادة ما يكون { status: 'disconnected' } أو مشابه
+
+  } catch (error) {
+    console.log("❌ حدث خطأ أثناء تسجيل الخروج من المحفظة:");
+    console.error(error);
+  }
 }
+
 </script>
 
 </body>
