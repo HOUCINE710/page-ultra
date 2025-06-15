@@ -179,9 +179,33 @@ async function loginWallet() {
 }
 
 // دالة التحقق من حالة المحفظة (اختيارية لتطوير مستقبلي)
-function checkWallet() {
+async function checkWallet() {
   console.log('🕵️‍♂️ جارٍ التحقق من حالة المحفظة...');
+
+  try {
+    // نحاول الاتصال بالمحفظة فقط إذا كانت موثوقة مسبقًا
+    const response = await ultra.connect({ onlyIfTrusted: true });
+
+    // استخراج البيانات من الاستجابة
+    const walletId = response.data.blockchainid;
+    const pubKey = response.data.publicKey;
+
+    console.log("✅ تم التحقق من الاتصال الموثوق:");
+    console.log("🔗 Wallet ID: " + walletId);
+    console.log("🔑 Public Key: " + pubKey);
+
+    // يمكننا حفظ معلومات الجلسة إذا أردت
+    localStorage.setItem('eagerlyConnection', 'true');
+
+  } catch (err) {
+    console.log("❌ فشل التحقق من الاتصال الموثوق!");
+    console.log(err);
+
+    // حذف القيمة من localStorage إذا فشل الاتصال
+    localStorage.removeItem('eagerlyConnection');
+  }
 }
+
 
 // دالة تسجيل الخروج من المحفظة (يمكنك لاحقًا ربطها بزر)
 function logoutWallet() {
