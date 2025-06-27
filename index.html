@@ -47,6 +47,12 @@
   <span>Please login to your <strong>Ultra</strong> Wallet to continue.</span>
 </div>
 
+<!-- ✅ Wallet Info Toast -->
+<div id="walletInfoToast" class="fixed top-44 left-0 max-w-md bg-green-600 text-white px-6 py-4 rounded shadow-lg hidden z-50 slide-in-left">
+  <!-- سيتم تعبئة المحتوى من خلال JavaScript -->
+</div>
+
+
 
   <main class="max-w-4xl mx-auto px-4 py-10">
     <h1 class="text-2xl font-bold text-purple-400 mb-6">
@@ -136,22 +142,29 @@
       }
     }
 
-    async function checkWallet() {
-      console.log('🕵️‍♂️ Checking wallet state...');
-      try {
-        const response = await ultra.connect({ onlyIfTrusted: true });
-        const walletId = response.data.blockchainid;
-        const pubKey = response.data.publicKey;
-        console.log("✅ Trusted connection verified:");
-        console.log("🔗 Wallet ID: " + walletId);
-        console.log("🔑 Public Key: " + pubKey);
-        localStorage.setItem('eagerlyConnection', 'true');
-      } catch (err) {
-        console.log("❌ Failed to verify trusted connection!");
-        console.log(err);
-        localStorage.removeItem('eagerlyConnection');
-      }
-    }
+ async function checkWallet() {
+  console.log('🕵️‍♂️ Checking wallet state...');
+  try {
+    const response = await ultra.connect({ onlyIfTrusted: true });
+    const walletId = response.data.blockchainid;
+    const pubKey = response.data.publicKey;
+    console.log("✅ Trusted connection verified:");
+    console.log("🔗 Wallet ID: " + walletId);
+    console.log("🔑 Public Key: " + pubKey);
+    localStorage.setItem('eagerlyConnection', 'true');
+
+    // ✅ Show Wallet Info Toast
+    showCustomToast('walletInfoToast', `
+      <strong class="block mb-1">✅ Wallet Connected</strong>
+      <span>Wallet ID: <code class="font-mono">${walletId}</code></span>
+    `);
+  } catch (err) {
+    console.log("❌ Failed to verify trusted connection!");
+    console.log(err);
+    localStorage.removeItem('eagerlyConnection');
+  }
+}
+
 
     async function logoutWallet() {
       console.log("👋 Logging out from wallet...");
